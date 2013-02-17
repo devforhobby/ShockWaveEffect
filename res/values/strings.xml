@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">ShockWave</string>
+    <string name="menu_context_gallery">Gallery</string>
+    <string name="image_view_description">Image View</string>
+
+</resources>
