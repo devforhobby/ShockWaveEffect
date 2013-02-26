@@ -1,6 +1,7 @@
 package com.github.therealspaceship.shockwave;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.Matrix;
@@ -17,6 +18,7 @@ public class SquareRenderer implements Renderer {
     private final float[] mProjMatrix = new float[16];
     private final float[] mVMatrix = new float[16];
     private Square mSquare;
+    private Bitmap mBitmap;
 
     public SquareRenderer(final Context context) {
         mContext = context;
@@ -57,7 +59,7 @@ public class SquareRenderer implements Renderer {
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
 
         // Draw square
-        mSquare.draw(mMVPMatrix);
+        mSquare.draw(mMVPMatrix, mBitmap);
     }
 
     @Override
@@ -70,6 +72,10 @@ public class SquareRenderer implements Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 1, 3);
+    }
+
+    public void setTexture(Bitmap bitmap) {
+        this.mBitmap = bitmap;
     }
 
 }

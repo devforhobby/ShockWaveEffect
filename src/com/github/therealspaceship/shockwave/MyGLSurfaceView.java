@@ -1,6 +1,7 @@
 package com.github.therealspaceship.shockwave;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
@@ -14,6 +15,8 @@ class MyGLSurfaceView extends GLSurfaceView {
 
     private static final String TAG = "MyGLSurfaceView";
 
+    private SquareRenderer renderer;
+
     public MyGLSurfaceView(Context context) {
         super(context);
 
@@ -21,10 +24,16 @@ class MyGLSurfaceView extends GLSurfaceView {
         setEGLContextClientVersion(2);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(new SquareRenderer(context));
+        renderer = new SquareRenderer(context);
+        setRenderer(renderer);
 
         // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+    }
+
+    public void renderGalleryPicture(Bitmap bitmap) {
+        renderer.setTexture(bitmap);
+        this.requestRender();
     }
 
     public static String readTextFileFromRawResource(final Context context, final int resourceId) {

@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
+import java.nio.FloatBuffer;
+
 /**
  * Author: Igor Lysak. Class based on this article <a href="http://andmonahov.blogspot.com/2012/10/opengl-es-20_13.html">http://andmonahov.blogspot.com</a>
  * Date: 20.02.13
@@ -20,7 +22,13 @@ public class Texture {
      * @param pictureId Picture resource id
      * @return identifier of loaded texture
      */
-    public static int loadTexture(Context context, int pictureId) {
+    public static int loadTexture(Context context, int pictureId, FloatBuffer mTextureBuffer) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), pictureId);
+
+        return loadTexture(bitmap, mTextureBuffer);
+    }
+
+    public static int loadTexture(Bitmap bitmap, FloatBuffer mTextureBuffer) {
         // создаем пустой массив из одного элемента
         // в этот массив OpenGL ES запишет свободный номер текстуры,
         // который называют именем текстуры
@@ -33,14 +41,13 @@ public class Texture {
         // делаем текстуру с именем name текущей
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, names[0]);
         // устанавливаем фильтры текстуры
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
         // устанавливаем режим повтора изображения
         // если координаты текстуры вышли за пределы от 0 до 1
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-        // загружаем картинку в Bitmap из ресурса
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), pictureId);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+
         // переписываем Bitmap в память видеокарты
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
         // удаляем Bitmap из памяти, т.к. картинка уже переписана в видеопамять

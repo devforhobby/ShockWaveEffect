@@ -5,14 +5,17 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
-import android.opengl.GLSurfaceView;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.IOException;
+
 public class MainActivity extends Activity {
 
-    private GLSurfaceView mGLSurfaceView;
+    private MyGLSurfaceView mGLSurfaceView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,12 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
             case RESULT_OK:
+                try {
+                    Bitmap mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    mGLSurfaceView.renderGalleryPicture(mBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
                 break;
             default:
                 break;
